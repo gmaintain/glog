@@ -62,9 +62,9 @@ func NewLogger() *Logger {
 	l.recordPool = &sync.Pool{New: func() interface{} {
 		return &Record{}
 	}}
-	//l.tunnel = make(chan *Record)
+	l.tunnel = make(chan *Record)
 	l.writers = append(l.writers, NewFileWriter())
-	//go writerRunner(l)
+	go writerRunner(l)
 	return l
 }
 
