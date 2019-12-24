@@ -21,7 +21,7 @@ func (f *FileWriter) Init() error {
 }
 
 func (f *FileWriter) Write(r *Record) error {
-	fmt.Println("file write")
+	fmt.Println("file write", "write func")
 	if _, err := f.filebufWriter.WriteString(r.String()); err != nil {
 		return err
 	}

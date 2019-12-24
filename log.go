@@ -11,7 +11,6 @@ import (
 )
 
 type Writer interface {
-	Init() error
 	Write(*Record) error
 }
 
@@ -33,7 +32,16 @@ const (
 	FATAL
 )
 
-var LEVEL_STRING = [...]string{"TRACE", "DEBUG" ,"INFO", "WARN", "ERROR", "FATAL"}
+var LEVEL_STRING = [...]string{"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"}
+
+var LEVEL_MAP = map[string]int{
+	"TRACE": 1,
+	"DEBUG": 2,
+	"INFO":  3,
+	"WARN":  4,
+	"ERROR": 5,
+	"FATAL": 6,
+}
 
 type Record struct {
 	timeinfo string
@@ -57,7 +65,6 @@ type Logger struct {
 
 func NewLogger() *Logger {
 	l := new(Logger)
-	l.level = DEBUG
 	l.timeLayout = "2016-01-02 15:04:05"
 	l.recordPool = &sync.Pool{New: func() interface{} {
 		return &Record{}
@@ -140,7 +147,7 @@ func writerRunner(logger *Logger) {
 					}
 				}
 			}
-		case <- rotatetimer.C:
+		case <-rotatetimer.C:
 			for _, w := range logger.writers {
 				if f, ok := w.(Rotated); ok {
 					if err := f.Rotate(); err != nil {

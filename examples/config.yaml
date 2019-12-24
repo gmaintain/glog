@@ -1,23 +1,21 @@
 -
-  enable: true
-  type: console
   color: true
+  enable: true
   level: debug
-
+  type: console
 -
   enable: true
-  type: file
-  file_name: 'gmaintain.log'
-  file_path: '/var/log'
+  file_name: gmaintain.log
+  file_path: /var/log
+  level: debug
   max_lines: 3000
   max_size: 3M
-  level: debug
-
+  type: file
 -
   enable: true
-  type: file
-  file_name: 'gmaintain-sql.log'
-  file_path: '/var/log'
-  max_lines: 3000
-  max_size: 3M
+  file_name: gmaintain-sql.log
+  file_path: /var/log
   level: info
+  max_lines: 3000
+  max_size: 3M
+  type: file

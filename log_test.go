@@ -2,10 +2,11 @@ package glog
 
 import (
 	"testing"
+	"time"
 )
 
-func TestLogger(t *testing.T)  {
+func TestLogger(t *testing.T) {
 	logger := NewLogger()
 	logger.Debug("%s", "log file")
-	//time.Sleep(time.Second * 1)
+	time.Sleep(time.Second * 3)
 }
