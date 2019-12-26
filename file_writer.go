@@ -3,6 +3,7 @@ package glog
 import (
 	"bufio"
 	"fmt"
+	"os"
 )
 
 type FileWriter struct {
@@ -21,7 +22,7 @@ func (f *FileWriter) Init() error {
 }
 
 func (f *FileWriter) Write(r *Record) error {
-	fmt.Println("file write", "write func")
+	fmt.Printf("file write record: %v\n", r.String())
 	if _, err := f.filebufWriter.WriteString(r.String()); err != nil {
 		return err
 	}
@@ -29,5 +30,9 @@ func (f *FileWriter) Write(r *Record) error {
 }
 
 func NewFileWriter() *FileWriter {
-	return &FileWriter{}
+	file, err := os.OpenFile("out/log.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, os.ModePerm)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return &FileWriter{bufio.NewWriter(file)}
 }

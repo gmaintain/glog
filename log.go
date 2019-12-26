@@ -51,7 +51,7 @@ type Record struct {
 }
 
 func (r *Record) String() string {
-	return fmt.Sprintf("[%s] [%s] [%s] [%s]", LEVEL_STRING[r.level], r.timeinfo, r.info, r.msg)
+	return fmt.Sprintf("[%s] [%s] [%s] %s\n", LEVEL_STRING[r.level], r.timeinfo, r.msg, r.info)
 }
 
 type Logger struct {
@@ -65,7 +65,7 @@ type Logger struct {
 
 func NewLogger() *Logger {
 	l := new(Logger)
-	l.timeLayout = "2016-01-02 15:04:05"
+	l.timeLayout = "2006-01-02 15:04:05-07"
 	l.recordPool = &sync.Pool{New: func() interface{} {
 		return &Record{}
 	}}
@@ -103,7 +103,7 @@ func (l *Logger) dispatch(level int, format string, args ...interface{}) {
 	var msg string
 
 	info := fmt.Sprintf(format, args...)
-	_, file, line, ok := runtime.Caller(3)
+	_, file, line, ok := runtime.Caller(2)
 	if ok {
 		msg = path.Base(file) + ":" + strconv.Itoa(line)
 	}
@@ -146,6 +146,7 @@ func writerRunner(logger *Logger) {
 						log.Println("flush error:", err)
 					}
 				}
+				flushtimer.Reset(time.Millisecond * 500)
 			}
 		case <-rotatetimer.C:
 			for _, w := range logger.writers {
